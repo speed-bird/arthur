@@ -26,11 +26,12 @@ const App: React.FC = () => {
   };
 
   const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserAnswer(event.target.value);
+    const value = event.target.value;
+    setUserAnswer(value === '' ? '' : parseFloat(value)); // Convertir en number ou garder vide
   };
 
   const handleSubmitAnswer = () => {
-    if (parseInt(userAnswer, 10) === questions[currentQuestionIndex].answer) {
+    if (parseInt(userAnswer as string, 10) === questions[currentQuestionIndex].answer) {
       alert("Correct !");
     } else {
       alert(`Incorrect. La bonne réponse est ${questions[currentQuestionIndex].answer}`);
