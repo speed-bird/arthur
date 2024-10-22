@@ -1,7 +1,14 @@
 /* App.css */
+
+.app-logo {
+  width: 100px; /* Ajuste la largeur selon tes préférences */
+  height: auto; /* Conserve les proportions */
+  margin-bottom: 20px; /* Espace en dessous du logo */
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff; /* Couleur de fond douce */
+  font-family: 'Comic Sans MS', cursive, sans-serif; /* Police amusante */
+  background-color: #e6f7ff; /* Couleur de fond légère et agréable */
   color: #333; /* Couleur du texte */
   display: flex;
   justify-content: center;
@@ -12,43 +19,79 @@ body {
 
 .container {
   text-align: center;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff; /* Blanc pour le conteneur */
+  border-radius: 15px; /* Coins arrondis */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
   padding: 20px;
-  width: 300px; /* Largeur fixe pour le conteneur */
+  width: 90%; /* Largeur responsive */
+  max-width: 400px; /* Largeur maximale pour les petits écrans */
+  border: 5px solid #4CAF50; /* Bordure verte */
 }
 
 button {
-  background-color: #4CAF50; /* Couleur du bouton */
+  background-color: #037c1d; /* Couleur orange vif */
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px; /* Plus d'espacement pour un bouton plus grand */
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 18px; /* Taille de police plus grande */
   margin: 10px 0;
   cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+  border-radius: 10px; /* Coins arrondis */
+  transition: background-color 0.3s, transform 0.2s; /* Transition pour un effet de survol */
+}
+
+.logo-button {
+  margin-left: 30px;
+  margin-right: 30px;
+  background: none; /* Supprime le fond du bouton */
+  border: none; /* Supprime la bordure du bouton */
+  padding: 0; /* Supprime le remplissage pour que le bouton soit de la même taille que l'image */
+  cursor: pointer; /* Change le curseur pour indiquer que c'est cliquable */
+}
+
+.logo-button img {
+  display: block; /* S'assure qu'il n'y a pas d'espace autour de l'image */
+  width: 50px; /* Largeur de l'image */
+  height: 50px; /* Hauteur de l'image */
 }
 
 button:hover {
-  background-color: #45a049; /* Couleur du bouton au survol */
+  background-color: #fb8c00; /* Couleur plus foncée au survol */
+  transform: scale(1.05); /* Effet de mise à l'échelle */
 }
 
-h1, h2 {
-  color: #4CAF50; /* Couleur des titres */
+h1 {
+  color: #6e6f71; /* Couleur bleue pour les titres */
+  font-size: 16px; /* Taille de police plus grande */
+}
+
+h2 {
+  color: #6e6f71; /* Couleur bleue pour les titres */
+  font-size: 12px; /* Taille de police plus grande */
 }
 
 .question {
-  font-size: 18px;
-  margin: 20px 0;
+  font-size: 26px; /* Taille de police pour les questions */
+  color: #364cf4; /* Couleur rouge pour les questions */
+  font-weight: bold; /* Mettre en gras les questions */
 }
 
 .score {
   font-size: 20px;
   font-weight: bold;
   margin: 20px 0;
+  color: #4CAF50; /* Couleur verte pour le score */
+}
+
+/* Styles supplémentaires pour un look amusant */
+.container img {
+  max-width: 100px; /* Limite la taille des images à l'intérieur du conteneur */
+  margin: 10px 0; /* Marge autour des images */
+}
+
+select {
+  margin-left: 10px; /* Ajuste la valeur pour l'espacement souhaité */
 }

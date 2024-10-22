@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import './App.css';
+import logoHome from './home.png'; // Assurez-vous que le chemin est correct
+import validate from './validate.png'; // Assurez-vous que le chemin est correct
+import trophy from './trophy.png'; // Assurez-vous que le chemin est correct
+import fail from './fail.png';
+import logo from './logo.png'; // Remplace par le chemin correct de ton logo
 
 const App: React.FC = () => {
-  const [questionCount, setQuestionCount] = useState<number>(5);
-  const [maxMultiplier, setMaxMultiplier] = useState<number>(10); // État pour le maxMultiplier
+  const [questionCount, setQuestionCount] = useState<number>(10); // Valeur par défaut : 10 questions
+  const [maxMultiplier, setMaxMultiplier] = useState<number>(2); // Valeur par défaut : maxMultiplier = 2
   const [isQuizStarted, setIsQuizStarted] = useState<boolean>(false);
   const [questions, setQuestions] = useState<{ question: string; answer: number }[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -14,42 +19,36 @@ const App: React.FC = () => {
   const generateQuestions = (count: number) => {
     const newQuestions = [];
     for (let i = 0; i < count; i++) {
-        const num1 = Math.floor(Math.random() * (maxMultiplier)) + 1; // Premier opérateur entre 1 et maxMultiplier
-        const num2 = Math.floor(Math.random() * 21); // Deuxième opérateur entre 0 et 20
-
-        const isMultiplication = Math.random() < 0.5; // 50% de chance d'être une multiplication ou une division
-
-        // On décide aléatoirement de l'ordre d'affichage
-        const shouldInvert = Math.random() < 0.5; // 50% de chance d'inverser
-
-        if (isMultiplication) {
-            // Pour multiplication, on peut garder num1 comme <= maxMultiplier et num2 <= 20
-            if (shouldInvert) {
-                newQuestions.push({ question: `${num2} x ${num1}`, answer: num1 * num2 });
-            } else {
-                newQuestions.push({ question: `${num1} x ${num2}`, answer: num1 * num2 });
-            }
-        } else if (num2 !== 0) { // Évite la division par zéro
-            const product = num1 * num2; // Produit
-            if (shouldInvert) {
-                newQuestions.push({ question: `${product} ÷ ${num2}`, answer: num1 });
-            } else {
-                newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
-            }
-        } else {
-            i--; // Ignore ce tour si num2 est 0 pour éviter une question invalide
-        }
+      const isMultiplication = Math.random() < 0.5; // Décider aléatoirement si c'est une multiplication ou une division
+      let num1, num2;
+  
+      if (isMultiplication) {
+        num1 = Math.floor(Math.random() * maxMultiplier) + 1; // num1 entre 1 et maxMultiplier
+        num2 = Math.floor(Math.random() * 20) + 1; // num2 entre 1 et 20
+        newQuestions.push({ question: `${num1} x ${num2}`, answer: num1 * num2 });
+      } else {
+        // Pour la division, on s'assure que num1 (numérateur) <= 20 et num2 (dénominateur) <= maxMultiplier
+        num2 = Math.floor(Math.random() * maxMultiplier) + 1; // num2 entre 1 et maxMultiplier
+        num1 = Math.floor(Math.random() * 20) + 1; // num1 entre 1 et 20
+  
+        // S'assurer que num1 est un multiple de num2 pour que la division soit entière
+        const product = num1 * num2; // Calculer le produit à partir de num1 et num2
+        newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
+      }
     }
     setQuestions(newQuestions);
-};
-
-
+  };
+  
+  
+  
+  
+  
 
   const handleStartQuiz = () => {
     generateQuestions(questionCount);
     setIsQuizStarted(true);
-    setScore(0); // Réinitialiser le score
-    setQuizFinished(false); // Remet à zéro l'état de fin du quiz
+    setScore(0);
+    setQuizFinished(false);
   };
 
   const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +57,13 @@ const App: React.FC = () => {
   };
 
   const handleSubmitAnswer = () => {
-    if (parseInt(userAnswer as string, 10) === questions[currentQuestionIndex].answer) {
+    // Vérification si une réponse a été saisie
+    if (userAnswer === '') {
+      alert("Veuillez entrer une réponse.");
+      return;
+    }
+
+    if (userAnswer === questions[currentQuestionIndex].answer) {
       alert("Correct!");
       setScore(score + 1);
     } else {
@@ -73,39 +78,65 @@ const App: React.FC = () => {
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSubmitAnswer(); // Appel de la fonction pour valider la réponse
+    }
+  };
+
+  const handleExitQuiz = () => {
+    setIsQuizStarted(false);
+    setCurrentQuestionIndex(0);
+    setUserAnswer('');
+    setScore(0);
+    setQuestions([]);
+    setQuizFinished(false);
+  };
+
   return (
     <div className="container">
+      <img src={logo} alt="Logo" className="app-logo" /> {/* Ajout du logo ici */}
       {!isQuizStarted ? (
         <div>
-          <h1>Kies het aantal vragen</h1>
+          <h1>Aantal vragen :
           <select value={questionCount} onChange={(e) => setQuestionCount(parseInt(e.target.value, 10))}>
-            <option value={5}>5 vragen</option>
-            <option value={10}>10 vragen</option>
-            <option value={15}>15 vragen</option>
-            <option value={20}>20 vragen</option>
+            {[...Array(50)].map((_, index) => (
+              <option key={index + 1} value={index + 1}>{index + 1}</option>
+            ))}
           </select>
-          <h2>Kies de maximale tafel (2 tot 10)</h2>
+          </h1>
+          <h1>Tafel van :
           <select value={maxMultiplier} onChange={(e) => setMaxMultiplier(parseInt(e.target.value, 10))}>
             {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
               <option key={num} value={num}>{num}</option>
             ))}
           </select>
+          </h1>
           <div style={{ marginTop: '20px' }}>
-            <button onClick={handleStartQuiz}>Begin de quiz</button>
+            <button onClick={handleStartQuiz}>Start</button>
           </div>
         </div>
       ) : quizFinished ? (
-        <FinalMessage score={score} totalQuestions={questions.length} />
+        <div>
+          <FinalMessage score={score} totalQuestions={questions.length} />
+          <button onClick={handleExitQuiz} className="logo-button">
+            <img src={logoHome} alt="Home" />
+          </button>
+        </div>
       ) : (
-        <Quiz 
-          question={questions[currentQuestionIndex]} 
-          onSubmit={handleSubmitAnswer} 
-          userAnswer={userAnswer} 
-          onAnswerChange={handleAnswerChange} 
-          currentQuestionIndex={currentQuestionIndex}
-          totalQuestions={questions.length}
-          score={score} 
-        />
+        <div>
+          <Quiz 
+            question={questions[currentQuestionIndex]} 
+            onSubmit={handleSubmitAnswer} 
+            userAnswer={userAnswer} 
+            onAnswerChange={handleAnswerChange} 
+            onKeyPress={handleKeyPress} // Ajoute cette ligne
+            currentQuestionIndex={currentQuestionIndex}
+            totalQuestions={questions.length}
+            score={score} 
+            onExit={handleExitQuiz} // Passer la fonction à Quiz
+          />
+        </div>
       )}
     </div>
   );
@@ -116,26 +147,33 @@ const Quiz: React.FC<{
   onSubmit: () => void; 
   userAnswer: number | ''; 
   onAnswerChange: (event: React.ChangeEvent<HTMLInputElement>) => void; 
+  onKeyPress: (event: React.KeyboardEvent<HTMLInputElement>) => void; // Ajoute cette ligne
   currentQuestionIndex: number; 
   totalQuestions: number;
   score: number; 
-}> = ({ question, onSubmit, userAnswer, onAnswerChange, currentQuestionIndex, totalQuestions, score }) => {
+  onExit: () => void; // Ajoute onExit ici
+}> = ({ question, onSubmit, userAnswer, onAnswerChange, onKeyPress, currentQuestionIndex, totalQuestions, score, onExit }) => {
   if (!question) return null;
 
   return (
     <div>
-      <h2>Vraag {currentQuestionIndex + 1} van {totalQuestions}</h2>
+      <h2>Vraag {currentQuestionIndex + 1} van {totalQuestions} - Score: {score}</h2>
       <p className="question">{question.question}</p>
       <input 
         type="number" 
         value={userAnswer} 
         onChange={onAnswerChange} 
+        onKeyPress={onKeyPress} // Ajoute cette ligne
         placeholder="Uw antwoord" 
       />
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={onSubmit}>Indienen</button>
+      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+        <button onClick={onSubmit} className="logo-button">
+          <img src={validate} alt="Validate" />
+        </button>
+        <button onClick={onExit} className="logo-button">
+          <img src={logoHome} alt="Home" />
+        </button>
       </div>
-      <div className="score">Score: {score}/{currentQuestionIndex}</div>
     </div>
   );
 };
@@ -146,15 +184,24 @@ const FinalMessage: React.FC<{ score: number, totalQuestions: number }> = ({ sco
     <div>
       {percentage >= 80 ? (
         <div>
-          <h2>Gefeliciteerd! Je hebt {percentage}% van de vragen goed beantwoord!</h2>
+          <h2>{percentage}%</h2>
+          <h2>Gefeliciteerd ! </h2>
+          <h2>Je score is {score}/{totalQuestions}</h2>
           <img 
-            src="https://example.com/trophy.png" 
-            alt="Trophy" 
+            src={trophy} 
+            alt="Trophée" 
             style={{ maxWidth: '200px', marginBottom: '20px' }} 
           />
         </div>
       ) : (
-        <h2>Je hebt de quiz voltooid! Je score is {score} van de {totalQuestions}.</h2>
+        <div>
+          <h2>Quiz voltooid ! Je score is {score}/{totalQuestions}.</h2>
+          <img 
+            src={fail} 
+            alt="Échec" 
+            style={{ maxWidth: '200px', marginBottom: '20px' }} 
+          />
+        </div>
       )}
     </div>
   );
