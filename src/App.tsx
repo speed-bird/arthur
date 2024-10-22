@@ -33,7 +33,11 @@ const App: React.FC = () => {
   
         // S'assurer que num1 est un multiple de num2 pour que la division soit entière
         const product = num1 * num2; // Calculer le produit à partir de num1 et num2
-        newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
+        if (num1 < num2) {
+          newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
+        } else {
+          newQuestions.push({ question: `${product} ÷ ${num2}`, answer: num1 });
+          }
       }
     }
     setQuestions(newQuestions);
@@ -157,7 +161,8 @@ const Quiz: React.FC<{
 
   return (
     <div>
-      <h2>Vraag {currentQuestionIndex + 1} van {totalQuestions} - Score: {score}</h2>
+      <h2>Vraag {currentQuestionIndex + 1} van {totalQuestions}</h2>
+      <h2>[Score : {score} / {currentQuestionIndex}]</h2>
       <p className="question">{question.question}</p>
       <input 
         type="number" 
@@ -167,26 +172,25 @@ const Quiz: React.FC<{
         placeholder="Uw antwoord" 
       />
       <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-        <button onClick={onSubmit} className="logo-button">
-          <img src={validate} alt="Validate" />
-        </button>
-        <button onClick={onExit} className="logo-button">
+        <button onClick={onExit} className="logo-button" style={{ marginRight: '20px'}}>
           <img src={logoHome} alt="Home" />
         </button>
+        <button onClick={onSubmit} className="logo-button" style={{ marginLeft: '20px'}}>
+          <img src={validate} alt="Validate" />
+        </button>
+        
       </div>
     </div>
   );
-};
-
+}
 const FinalMessage: React.FC<{ score: number, totalQuestions: number }> = ({ score, totalQuestions }) => {
   const percentage = (score / totalQuestions) * 100;
   return (
     <div>
       {percentage >= 80 ? (
         <div>
-          <h2>{percentage}%</h2>
           <h2>Gefeliciteerd ! </h2>
-          <h2>Je score is {score}/{totalQuestions}</h2>
+          <h2>Je score is {score}/{totalQuestions} [{percentage}%]</h2>
           <img 
             src={trophy} 
             alt="Trophée" 

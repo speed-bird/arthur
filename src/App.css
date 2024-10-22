@@ -44,8 +44,6 @@ button {
 }
 
 .logo-button {
-  margin-left: 30px;
-  margin-right: 30px;
   background: none; /* Supprime le fond du bouton */
   border: none; /* Supprime la bordure du bouton */
   padding: 0; /* Supprime le remplissage pour que le bouton soit de la même taille que l'image */
