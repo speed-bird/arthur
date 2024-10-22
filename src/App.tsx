@@ -3,28 +3,47 @@ import './App.css';
 
 const App: React.FC = () => {
   const [questionCount, setQuestionCount] = useState<number>(5);
+  const [maxMultiplier, setMaxMultiplier] = useState<number>(10); // État pour le maxMultiplier
   const [isQuizStarted, setIsQuizStarted] = useState<boolean>(false);
   const [questions, setQuestions] = useState<{ question: string; answer: number }[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [userAnswer, setUserAnswer] = useState<number | ''>('');
   const [score, setScore] = useState<number>(0);
-  const [quizFinished, setQuizFinished] = useState<boolean>(false); // Nouvel état pour savoir si le quiz est fini
+  const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
   const generateQuestions = (count: number) => {
     const newQuestions = [];
     for (let i = 0; i < count; i++) {
-      const num1 = Math.floor(Math.random() * 10) + 1; // Nombre entre 1 et 10
-      const num2 = Math.floor(Math.random() * 10) + 1;
-      const isMultiplication = Math.random() < 0.5; // 50% de chance d'être une multiplication ou une division
-      if (isMultiplication) {
-        newQuestions.push({ question: `${num1} x ${num2}`, answer: num1 * num2 });
-      } else {
-        const product = num1 * num2;
-        newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
-      }
+        const num1 = Math.floor(Math.random() * (maxMultiplier)) + 1; // Premier opérateur entre 1 et maxMultiplier
+        const num2 = Math.floor(Math.random() * 21); // Deuxième opérateur entre 0 et 20
+
+        const isMultiplication = Math.random() < 0.5; // 50% de chance d'être une multiplication ou une division
+
+        // On décide aléatoirement de l'ordre d'affichage
+        const shouldInvert = Math.random() < 0.5; // 50% de chance d'inverser
+
+        if (isMultiplication) {
+            // Pour multiplication, on peut garder num1 comme <= maxMultiplier et num2 <= 20
+            if (shouldInvert) {
+                newQuestions.push({ question: `${num2} x ${num1}`, answer: num1 * num2 });
+            } else {
+                newQuestions.push({ question: `${num1} x ${num2}`, answer: num1 * num2 });
+            }
+        } else if (num2 !== 0) { // Évite la division par zéro
+            const product = num1 * num2; // Produit
+            if (shouldInvert) {
+                newQuestions.push({ question: `${product} ÷ ${num2}`, answer: num1 });
+            } else {
+                newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
+            }
+        } else {
+            i--; // Ignore ce tour si num2 est 0 pour éviter une question invalide
+        }
     }
     setQuestions(newQuestions);
-  };
+};
+
+
 
   const handleStartQuiz = () => {
     generateQuestions(questionCount);
@@ -50,7 +69,7 @@ const App: React.FC = () => {
     if (nextIndex < questions.length) {
       setCurrentQuestionIndex(nextIndex);
     } else {
-      setQuizFinished(true); // Le quiz est fini
+      setQuizFinished(true);
     }
   };
 
@@ -64,6 +83,12 @@ const App: React.FC = () => {
             <option value={10}>10 vragen</option>
             <option value={15}>15 vragen</option>
             <option value={20}>20 vragen</option>
+          </select>
+          <h2>Kies de maximale tafel (2 tot 10)</h2>
+          <select value={maxMultiplier} onChange={(e) => setMaxMultiplier(parseInt(e.target.value, 10))}>
+            {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+              <option key={num} value={num}>{num}</option>
+            ))}
           </select>
           <div style={{ marginTop: '20px' }}>
             <button onClick={handleStartQuiz}>Begin de quiz</button>
