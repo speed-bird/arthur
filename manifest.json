@@ -3,7 +3,7 @@
   "name": "Entraînement Arthur : Multiplications et Divisions",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "/public/images/logo.png",
       "sizes": "1024x1024",
       "type": "image/png"
     },
