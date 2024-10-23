@@ -9,6 +9,7 @@ import logo from './logo.png'; // Remplace par le chemin correct de ton logo
 const App: React.FC = () => {
   const [questionCount, setQuestionCount] = useState<number>(10); // Valeur par défaut : 10 questions
   const [maxMultiplier, setMaxMultiplier] = useState<number>(2); // Valeur par défaut : maxMultiplier = 2
+  const [isVanSelected, setIsVanSelected] = useState<boolean>(true); // Valeur par défaut : "van" sélectionné
   const [isQuizStarted, setIsQuizStarted] = useState<boolean>(false);
   const [questions, setQuestions] = useState<{ question: string; answer: number }[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -23,30 +24,23 @@ const App: React.FC = () => {
       let num1, num2;
   
       if (isMultiplication) {
-        num1 = Math.floor(Math.random() * maxMultiplier) + 1; // num1 entre 1 et maxMultiplier
+        num1 = isVanSelected ? maxMultiplier : Math.floor(Math.random() * maxMultiplier) + 1; // num1 = maxMultiplier si "van", sinon entre 1 et maxMultiplier
         num2 = Math.floor(Math.random() * 20) + 1; // num2 entre 1 et 20
         newQuestions.push({ question: `${num1} x ${num2}`, answer: num1 * num2 });
       } else {
-        // Pour la division, on s'assure que num1 (numérateur) <= 20 et num2 (dénominateur) <= maxMultiplier
         num2 = Math.floor(Math.random() * maxMultiplier) + 1; // num2 entre 1 et maxMultiplier
         num1 = Math.floor(Math.random() * 20) + 1; // num1 entre 1 et 20
-  
-        // S'assurer que num1 est un multiple de num2 pour que la division soit entière
+
         const product = num1 * num2; // Calculer le produit à partir de num1 et num2
         if (num1 < num2) {
           newQuestions.push({ question: `${product} ÷ ${num1}`, answer: num2 });
         } else {
           newQuestions.push({ question: `${product} ÷ ${num2}`, answer: num1 });
-          }
+        }
       }
     }
     setQuestions(newQuestions);
   };
-  
-  
-  
-  
-  
 
   const handleStartQuiz = () => {
     generateQuestions(questionCount);
@@ -61,20 +55,23 @@ const App: React.FC = () => {
   };
 
   const handleSubmitAnswer = () => {
-    // Vérification si une réponse a été saisie
     if (userAnswer === '') {
       alert("Veuillez entrer une réponse.");
       return;
     }
 
-    if (userAnswer === questions[currentQuestionIndex].answer) {
+    const currentAnswer = questions[currentQuestionIndex].answer;
+
+    if (userAnswer === currentAnswer) {
       alert("Correct!");
       setScore(score + 1);
     } else {
-      alert(`Onjuist. Het juiste antwoord is ${questions[currentQuestionIndex].answer}`);
+      alert(`Incorrect. La bonne réponse est ${currentAnswer}.`);
     }
+
     setUserAnswer('');
     const nextIndex = currentQuestionIndex + 1;
+
     if (nextIndex < questions.length) {
       setCurrentQuestionIndex(nextIndex);
     } else {
@@ -84,7 +81,7 @@ const App: React.FC = () => {
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleSubmitAnswer(); // Appel de la fonction pour valider la réponse
+      handleSubmitAnswer();
     }
   };
 
@@ -103,18 +100,23 @@ const App: React.FC = () => {
       {!isQuizStarted ? (
         <div>
           <h1>Aantal vragen :
-          <select value={questionCount} onChange={(e) => setQuestionCount(parseInt(e.target.value, 10))}>
-            {[...Array(50)].map((_, index) => (
-              <option key={index + 1} value={index + 1}>{index + 1}</option>
-            ))}
-          </select>
+            <select value={questionCount} onChange={(e) => setQuestionCount(parseInt(e.target.value, 10))}>
+              {[...Array(50)].map((_, index) => (
+                <option key={index + 1} value={index + 1}>{index + 1}</option>
+              ))}
+            </select>
           </h1>
-          <h1>Tafel van :
-          <select value={maxMultiplier} onChange={(e) => setMaxMultiplier(parseInt(e.target.value, 10))}>
-            {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-              <option key={num} value={num}>{num}</option>
-            ))}
-          </select>
+          <h1>Tafel :
+            <select value={isVanSelected ? 'van' : 'tot'} onChange={(e) => setIsVanSelected(e.target.value === 'van')}>
+              <option value="van">van</option>
+              <option value="tot">tot</option>
+            </select>
+            <select value={maxMultiplier} onChange={(e) => setMaxMultiplier(parseInt(e.target.value, 10))}>
+              {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                <option key={num} value={num}>{num}</option>
+              ))}
+            </select>
+            
           </h1>
           <div style={{ marginTop: '20px' }}>
             <button onClick={handleStartQuiz}>Start</button>
@@ -123,7 +125,7 @@ const App: React.FC = () => {
       ) : quizFinished ? (
         <div>
           <FinalMessage score={score} totalQuestions={questions.length} />
-          <button onClick={handleExitQuiz} className="logo-button">
+          <button onClick={handleExitQuiz} className="button-home">
             <img src={logoHome} alt="Home" />
           </button>
         </div>
@@ -134,11 +136,11 @@ const App: React.FC = () => {
             onSubmit={handleSubmitAnswer} 
             userAnswer={userAnswer} 
             onAnswerChange={handleAnswerChange} 
-            onKeyPress={handleKeyPress} // Ajoute cette ligne
+            onKeyPress={handleKeyPress} 
             currentQuestionIndex={currentQuestionIndex}
             totalQuestions={questions.length}
             score={score} 
-            onExit={handleExitQuiz} // Passer la fonction à Quiz
+            onExit={handleExitQuiz} 
           />
         </div>
       )}
@@ -151,38 +153,48 @@ const Quiz: React.FC<{
   onSubmit: () => void; 
   userAnswer: number | ''; 
   onAnswerChange: (event: React.ChangeEvent<HTMLInputElement>) => void; 
-  onKeyPress: (event: React.KeyboardEvent<HTMLInputElement>) => void; // Ajoute cette ligne
+  onKeyPress: (event: React.KeyboardEvent<HTMLInputElement>) => void; 
   currentQuestionIndex: number; 
   totalQuestions: number;
   score: number; 
-  onExit: () => void; // Ajoute onExit ici
+  onExit: () => void;
 }> = ({ question, onSubmit, userAnswer, onAnswerChange, onKeyPress, currentQuestionIndex, totalQuestions, score, onExit }) => {
   if (!question) return null;
 
   return (
     <div>
-      <h2>Vraag {currentQuestionIndex + 1} van {totalQuestions}</h2>
-      <h2>[Score : {score} / {currentQuestionIndex}]</h2>
-      <p className="question">{question.question}</p>
-      <input 
-        type="number" 
-        value={userAnswer} 
-        onChange={onAnswerChange} 
-        onKeyPress={onKeyPress} // Ajoute cette ligne
-        placeholder="Uw antwoord" 
-      />
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-        <button onClick={onExit} className="logo-button" style={{ marginRight: '20px'}}>
-          <img src={logoHome} alt="Home" />
-        </button>
-        <button onClick={onSubmit} className="logo-button" style={{ marginLeft: '20px'}}>
-          <img src={validate} alt="Validate" />
-        </button>
-        
-      </div>
+      <div>
+        <h2>Vraag {currentQuestionIndex + 1} van {totalQuestions}</h2>
+        <h2>[Score : {score} / {currentQuestionIndex}]</h2>
+        <p className="question">{question.question}</p>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+          <input 
+            type="number" 
+            value={userAnswer} 
+            onChange={onAnswerChange} 
+            onKeyPress={onKeyPress} 
+            placeholder="Antwoord" 
+            style={{ width: '100px', marginRight: '10px' }} // Champ de réponse moins large
+            autoFocus // Met le focus directement sur ce champ à l'affichage
+          />
+        </div>
+        <div>
+          <button onClick={onSubmit} className="button-validate">
+            <img src={validate} alt="Validate" />
+          </button>
+        </div>
+        <div>
+          <button onClick={onExit} className="button-home">
+            <img src={logoHome} alt="Home"/>
+          </button>
+    </div>
+</div>
+
     </div>
   );
 }
+
 const FinalMessage: React.FC<{ score: number, totalQuestions: number }> = ({ score, totalQuestions }) => {
   const percentage = (score / totalQuestions) * 100;
   return (
@@ -199,7 +211,8 @@ const FinalMessage: React.FC<{ score: number, totalQuestions: number }> = ({ sco
         </div>
       ) : (
         <div>
-          <h2>Quiz voltooid ! Je score is {score}/{totalQuestions}.</h2>
+          <h2>Quiz voltooid ! </h2>
+          <h2>Je score is {score}/{totalQuestions} [{percentage}%]</h2>
           <img 
             src={fail} 
             alt="Échec" 

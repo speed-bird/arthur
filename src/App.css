@@ -1,15 +1,13 @@
-/* App.css */
-
 .app-logo {
-  width: 100px; /* Ajuste la largeur selon tes préférences */
-  height: auto; /* Conserve les proportions */
-  margin-bottom: 20px; /* Espace en dessous du logo */
+  width: 100px; 
+  height: auto;
+  margin-bottom: 20px;
 }
 
 body {
   font-family: 'Poppins', Arial, Helvetica, sans-serif; 
-  background-color: #e6f7ff; /* Couleur de fond légère et agréable */
-  color: #333; /* Couleur du texte */
+  background-color: #e6f7ff;
+  color: #333;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,77 +17,125 @@ body {
 
 .container {
   text-align: center;
-  background-color: #ffffff; /* Blanc pour le conteneur */
-  border-radius: 15px; /* Coins arrondis */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre douce */
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 90%; /* Largeur responsive */
-  max-width: 400px; /* Largeur maximale pour les petits écrans */
-  border: 5px solid #4CAF50; /* Bordure verte */
+  width: 100%;
+  max-width: 400px;
+  border: 5px solid #358e38;
 }
 
 button {
-  background-color: #037c1d; /* Couleur orange vif */
+  background-color: #037c1d;
   color: white;
   border: none;
-  padding: 12px 25px; /* Plus d'espacement pour un bouton plus grand */
+  padding: 12px 25px;
   text-align: center;
-  text-decoration: none;
   display: inline-block;
-  font-size: 18px; /* Taille de police plus grande */
+  font-size: 18px;
   margin: 10px 0;
   cursor: pointer;
-  border-radius: 10px; /* Coins arrondis */
-  transition: background-color 0.3s, transform 0.2s; /* Transition pour un effet de survol */
-}
-
-.logo-button {
-  background: none; /* Supprime le fond du bouton */
-  border: none; /* Supprime la bordure du bouton */
-  padding: 0; /* Supprime le remplissage pour que le bouton soit de la même taille que l'image */
-  cursor: pointer; /* Change le curseur pour indiquer que c'est cliquable */
-}
-
-.logo-button img {
-  display: block; /* S'assure qu'il n'y a pas d'espace autour de l'image */
-  width: 50px; /* Largeur de l'image */
-  height: 50px; /* Hauteur de l'image */
+  border-radius: 10px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-  background-color: #fb8c00; /* Couleur plus foncée au survol */
-  transform: scale(1.05); /* Effet de mise à l'échelle */
+  background-color: #fb8c00;
+  transform: scale(1.05);
+}
+
+/* Bouton Home personnalisé */
+.button-validate {
+  background-color: #f0f0f0; /* Couleur de fond grise */
+  border: 2px solid #ccc; /* Bordure grise */
+  padding: 8px 15px; /* Ajuste le padding selon tes préférences */
+  border-radius: 5px; /* Bords arrondis */
+  cursor: pointer; /* Curseur en mode clic */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Transition pour l'ombre et le survol */
+  display: flex; /* Utilise flexbox pour centrer l'image */
+  align-items: center; /* Centre verticalement */
+  justify-content: center; /* Centre horizontalement */
+  height: 30px; /* Spécifie une hauteur fixe */
+  width: 90%; /* Prend toute la largeur du conteneur */
+  max-width: 200px; /* Limite la largeur du bouton si nécessaire */
+  margin: 0 auto; /* Centre le bouton horizontalement */
+  margin-bottom: 5px;
+}
+  
+
+
+.button-validate img {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: 0 auto;
+  pointer-events: none; /* Désactive les événements sur l'image elle-même */
+}
+
+.button-validate:hover img {
+  transform: scale(1.1);
+}
+
+.button-home {
+  background-color: #f0f0f0; /* Couleur de fond grise */
+  border: 2px solid #ccc; /* Bordure grise */
+  padding: 8px 15px; /* Ajuste le padding selon tes préférences */
+  border-radius: 5px; /* Bords arrondis */
+  cursor: pointer; /* Curseur en mode clic */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Transition pour l'ombre et le survol */
+  display: flex; /* Utilise flexbox pour centrer l'image */
+  align-items: center; /* Centre verticalement */
+  justify-content: center; /* Centre horizontalement */
+  height: 30px; /* Spécifie une hauteur fixe */
+  width: 90%; /* Prend toute la largeur du conteneur */
+  max-width: 200px; /* Limite la largeur du bouton si nécessaire */
+  margin: 0 auto; /* Centre le bouton horizontalement */
+}
+
+.button-home img {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: 0 5;
+  pointer-events: none; /* Désactive les événements sur l'image elle-même */
+}
+
+.button-home:hover img {
+  transform: scale(1.1);
 }
 
 h1 {
-  color: #6e6f71; /* Couleur bleue pour les titres */
-  font-size: 16px; /* Taille de police plus grande */
+  color: #6e6f71;
+  font-size: 16px;
 }
 
 h2 {
-  color: #6e6f71; /* Couleur bleue pour les titres */
-  font-size: 12px; /* Taille de police plus grande */
+  color: #6e6f71;
+  font-size: 12px;
 }
 
 .question {
-  font-size: 26px; /* Taille de police pour les questions */
-  color: #364cf4; /* Couleur rouge pour les questions */
-  font-weight: bold; /* Mettre en gras les questions */
+  font-size: 26px;
+  color: blue;
+  font-weight: bold;
 }
 
 .score {
   font-size: 20px;
   font-weight: bold;
   margin: 20px 0;
-  color: #4CAF50; /* Couleur verte pour le score */
+  color: #4CAF50;
 }
 
-/* Styles supplémentaires pour un look amusant */
+/* Images dans le conteneur */
 .container img {
-  max-width: 100px; /* Limite la taille des images à l'intérieur du conteneur */
-  margin: 10px 0; /* Marge autour des images */
+  max-width: 100px;
+  margin: 10px 0;
 }
 
 select {
-  margin-left: 10px; /* Ajuste la valeur pour l'espacement souhaité */
+  margin-left: 10px;
 }
